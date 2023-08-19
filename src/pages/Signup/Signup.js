@@ -1,29 +1,24 @@
 import React, { useState } from 'react'
 import { ContainerForm, ContainerSignup, Input } from './styled'
+import useForm from '../../hooks/useForm'
 
 export default function Signup() {
-    const [nomeUsuario, setNomeUsuario] = useState("")
-    const [email, setEmail] = useState("")
-    const [senha, setSenha] = useState("")
-    const [confirmaSenha, setConfirmaSenha] = useState("")
 
-    const onChangeNome = (e) => {
-        setNomeUsuario(e.target.value)
-    }
-    const onChangeEmail = (e) => {
-        setEmail(e.target.value)
-    }
-    const onChangeSenha = (e) => {
-        setSenha(e.target.value)
-    }
-    const onChangeConfirmaSenha = (e) => {
-        setConfirmaSenha(e.target.value)
-    }
+   const { form, onChangeInputs, clearInputs }= useForm ({
+    nomeUsuario:'',
+    email:'',
+    senha:'',
+    confirmasenha:''
 
-    const enviarCadastro = () => {
+   })
+    const enviarCadastro = (event) => {
+        event.preventDefault()
         //* EXTRA: validando a senha - ter certeza que o usuário sabe qual senha cadastrou
-        if (senha === confirmaSenha) {
-            console.log({nomeUsuario, email, senha, confirmaSenha})
+        if (form.senha === form.confirmaSenha) {
+            console.log(form)
+            clearInputs()
+        } else {
+            alert('Senhas diferentes')
         }
     }
 
@@ -33,30 +28,41 @@ export default function Signup() {
                 <label htmlFor='nome'>Nome de usuario:</label>
                 <Input
                     id='nome'
-                    value={nomeUsuario}
-                    onChange={onChangeNome}
+                    name='nomeUsuario'
+                    value={form.nomeUsuario}
+                    onChange={onChangeInputs}
                     placeholder="username"
+                    required
                 />
                 <label htmlFor='email'>Email:</label>
                 <Input
                     id='email'
-                    value={email}
-                    onChange={onChangeEmail}
+                    name='email'
+                    value={form.email}
+                    onChange={onChangeInputs}
                     placeholder="nome@email.com"
+                    required
                 />
                 <label htmlFor='senha'>Senha:</label>
                 <Input
                     id='senha'
-                    value={senha}
-                    onChange={onChangeSenha}
+                    name='senha'
+                    value={form.senha}
+                    onChange={onChangeInputs}
                     placeholder="Crie sua senha"
+                    pattern='^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$'
+                    title='deve conter ao menos um número, uma letra minúscula, uma letra maiúscula, um caractere especial e ao menos 8 dos caracteres mencionados'
+                    required
+
                 />
                 <label htmlFor='confirma-senha'>Confirmação de senha:</label>
                 <Input
                     id='confirma-senha'
-                    value={confirmaSenha}
-                    onChange={onChangeConfirmaSenha}
+                    name='confirmaSenha'
+                    value={form.confirmaSenha}
+                    onChange={onChangeInputs}
                     placeholder="Confirme a senha"
+                    required
                 />
                 <button>Cadastrar</button>
             </ContainerForm>
